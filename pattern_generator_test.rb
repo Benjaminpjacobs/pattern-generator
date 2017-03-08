@@ -33,13 +33,11 @@ class PatternGeneratorTest < Minitest::Test
     assert_equal 45697600, pg.total_available(pattern)
   end
 
-
   def test_it_can_generate_pattern
     pg = PatternGenerator.new
     pattern = ".#."
     assert_equal "A0A", pg.generate(0, pattern)
     assert_equal "A1B", pg.generate(27, pattern)
   end
-  
 
 end
