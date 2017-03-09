@@ -1,15 +1,26 @@
 class PatternGenerator
-  
-  PATTERNELEMENTS = {"."=>["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"], "#"=>['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
+  attr_accessor :pattern_arr, :imap
+
+  MIN_VAL = "0"
+  MAX_VAL = "9"
+  PATTERNELEMENTS = {
+    "."=> %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z), 
+    "#"=>(MIN_VAL..MAX_VAL).to_a
+  }
+
+  def initialize
+    @pattern_arr = []
+    @imap = []
+  end
 
   def verify(input, pattern)
     verify = true
     pattern.split('').zip(input.split('')).each do |compare|
-      if compare[0] == compare[1] || PATTERNELEMENTS[compare[0]].include?(compare[1])
-        next
-      else
+      if compare[0] != compare[1] && !PATTERNELEMENTS[compare[0]] .include?(compare[1])
         verify = false 
-        break       
+        break    
+      else
+        next    
       end
     end
     verify
@@ -17,9 +28,10 @@ class PatternGenerator
 
   def total_available(pattern)
     avail_array = pattern.split('').map do |item|
-      if item == "." 
+      case item
+      when "." 
         item = 26
-      elsif item == "#"
+      when "#"
         item = 10
       else
         item = nil
@@ -41,39 +53,35 @@ class PatternGenerator
   end
 
   def iterations_per_enumerator(iteration)
-    @imap = []
-    ia = @pattern_arr.reverse.map{|item| item.is_a?(Array) ? item.count : item}
+    ia = @pattern_arr.reverse.map{ |item| item.is_a?(Array) ? item.count : item }
     
     ia.each do |item|
       if item.is_a?(String)
-        @imap << 'lit'
+        imap << 'lit'
         next
       elsif iteration == 0
-        @imap << nil
+        imap << nil
         next
       elsif iteration < item
-        @imap << iteration
+        imap << iteration
       else
-        @imap << iteration % item
+        imap << iteration % item
       end
       iteration = iteration / item
     end
-    @imap.reverse!
+    imap.reverse!
+  end
+
+  def pattern_logic(x)
+    return x[0] if x[1] == "lit"
+    return x[0][0] if x[1].nil?
+    return x[0][x[1]]
   end
 
   def generate(iteration, pattern)
     create_enumerated_array(pattern)
     iterations_per_enumerator(iteration)
-    @serial = @pattern_arr.zip(@imap).map! do |x|
-      if x[1] == "lit"
-        x[0]
-      elsif x[1] == nil
-       x[0][0]
-      else
-        x[0][x[1]]
-      end
-    end   
-    @serial.join
+    @pattern_arr.zip(imap).map(&method(:pattern_logic)).join
   end  
   
 end
