@@ -1,11 +1,12 @@
 class PatternGenerator
-  attr_accessor :pattern_arr, :imap
+  attr_reader :imap
+  attr_accessor :pattern_arr
 
   MIN_VAL = "0"
   MAX_VAL = "9"
   PATTERNELEMENTS = {
     "."=> %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z), 
-    "#"=>(MIN_VAL..MAX_VAL).to_a
+    "#"=> (MIN_VAL..MAX_VAL).to_a
   }
 
   def initialize
@@ -72,7 +73,7 @@ class PatternGenerator
     imap.reverse!
   end
 
-  def pattern_logic(x)
+  def generator_pattern_logic(x)
     return x[0] if x[1] == "lit"
     return x[0][0] if x[1].nil?
     return x[0][x[1]]
@@ -81,7 +82,7 @@ class PatternGenerator
   def generate(iteration, pattern)
     create_enumerated_array(pattern)
     iterations_per_enumerator(iteration)
-    @pattern_arr.zip(imap).map(&method(:pattern_logic)).join
+    @pattern_arr.zip(imap).map(&method(:generator_pattern_logic)).join
   end  
   
 end
