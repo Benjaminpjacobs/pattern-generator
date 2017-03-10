@@ -5,8 +5,8 @@ class PatternGenerator
   MIN_VAL = "0"
   MAX_VAL = "9"
   PATTERNELEMENTS = {
-    "."=> %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z), 
-    "#"=> (MIN_VAL..MAX_VAL).to_a
+    "." => %w(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z), 
+    "#" => (MIN_VAL..MAX_VAL).to_a
   }
 
   def initialize
